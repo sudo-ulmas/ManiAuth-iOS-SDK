@@ -36,7 +36,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 LICENSE
   }
   s.author                = { 'Mani dev team' => 'rakhmatullaevulmas@gmail.com' }
-  s.source        = { :git => 'https://github.com/sudo-ulmas/ManiAppXcFrameworkDebug.git', :tag => 'v#{s.version}' }
+  s.source        = { :git => 'https://github.com/sudo-ulmas/ManiAppXcFrameworkDebug.git', :tag => "v#{s.version}" }
   s.documentation_url     = 'https://yagona.atlassian.net/wiki/spaces/Mani/pages/71139353/Mani+IOS+SDK+Documentation'
   s.platform              = :ios, '12.0'
   s.ios.vendored_frameworks   = ['App.xcframework']
