@@ -10,6 +10,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSUInteger, Environment) {
+  EnvironmentDev = 0,
+  EnvironmentProd = 1,
+};
+
+/// Wrapper for Environment to allow for nullability.
+@interface EnvironmentBox : NSObject
+@property(nonatomic, assign) Environment value;
+- (instancetype)initWithValue:(Environment)value;
+@end
+
 @class Token;
 @class HostInfo;
 
@@ -22,9 +33,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface HostInfo : NSObject
 + (instancetype)makeWithPaymentSystemId:(nullable NSString *)paymentSystemId
-    locale:(nullable NSString *)locale;
+    locale:(nullable NSString *)locale
+    environment:(nullable EnvironmentBox *)environment;
 @property(nonatomic, copy, nullable) NSString * paymentSystemId;
 @property(nonatomic, copy, nullable) NSString * locale;
+@property(nonatomic, strong, nullable) EnvironmentBox * environment;
 @end
 
 /// The codec used by all APIs.

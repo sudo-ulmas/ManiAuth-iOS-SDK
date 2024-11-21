@@ -31,6 +31,16 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
   return (result == [NSNull null]) ? nil : result;
 }
 
+@implementation EnvironmentBox
+- (instancetype)initWithValue:(Environment)value {
+  self = [super init];
+  if (self) {
+    _value = value;
+  }
+  return self;
+}
+@end
+
 @interface Token ()
 + (Token *)fromList:(NSArray<id> *)list;
 + (nullable Token *)nullableFromList:(NSArray<id> *)list;
@@ -70,16 +80,19 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
 
 @implementation HostInfo
 + (instancetype)makeWithPaymentSystemId:(nullable NSString *)paymentSystemId
-    locale:(nullable NSString *)locale {
+    locale:(nullable NSString *)locale
+    environment:(nullable EnvironmentBox *)environment {
   HostInfo* pigeonResult = [[HostInfo alloc] init];
   pigeonResult.paymentSystemId = paymentSystemId;
   pigeonResult.locale = locale;
+  pigeonResult.environment = environment;
   return pigeonResult;
 }
 + (HostInfo *)fromList:(NSArray<id> *)list {
   HostInfo *pigeonResult = [[HostInfo alloc] init];
   pigeonResult.paymentSystemId = GetNullableObjectAtIndex(list, 0);
   pigeonResult.locale = GetNullableObjectAtIndex(list, 1);
+  pigeonResult.environment = GetNullableObjectAtIndex(list, 2);
   return pigeonResult;
 }
 + (nullable HostInfo *)nullableFromList:(NSArray<id> *)list {
@@ -89,6 +102,7 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
   return @[
     self.paymentSystemId ?: [NSNull null],
     self.locale ?: [NSNull null],
+    self.environment ?: [NSNull null],
   ];
 }
 @end
@@ -102,6 +116,11 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
       return [Token fromList:[self readValue]];
     case 130: 
       return [HostInfo fromList:[self readValue]];
+    case 131: 
+      {
+        NSNumber *enumAsNumber = [self readValue];
+        return enumAsNumber == nil ? nil : [[EnvironmentBox alloc] initWithValue:[enumAsNumber integerValue]];
+      }
     default:
       return [super readValueOfType:type];
   }
@@ -118,6 +137,10 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
   } else if ([value isKindOfClass:[HostInfo class]]) {
     [self writeByte:130];
     [self writeValue:[value toList]];
+  } else if ([value isKindOfClass:[EnvironmentBox class]]) {
+    EnvironmentBox * box = (EnvironmentBox *)value;
+    [self writeByte:131];
+    [self writeValue:(value == nil ? [NSNull null] : [NSNumber numberWithInteger:box.value])];
   } else {
     [super writeValue:value];
   }
