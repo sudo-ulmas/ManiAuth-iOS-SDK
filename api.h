@@ -10,15 +10,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSUInteger, Environment) {
-  EnvironmentDev = 0,
-  EnvironmentProd = 1,
+typedef NS_ENUM(NSUInteger, ManiEnvironment) {
+  ManiEnvironmentDev = 0,
+  ManiEnvironmentProd = 1,
 };
 
-/// Wrapper for Environment to allow for nullability.
-@interface EnvironmentBox : NSObject
-@property(nonatomic, assign) Environment value;
-- (instancetype)initWithValue:(Environment)value;
+/// Wrapper for ManiEnvironment to allow for nullability.
+@interface ManiEnvironmentBox : NSObject
+@property(nonatomic, assign) ManiEnvironment value;
+- (instancetype)initWithValue:(ManiEnvironment)value;
 @end
 
 @class Token;
@@ -34,10 +34,10 @@ typedef NS_ENUM(NSUInteger, Environment) {
 @interface HostInfo : NSObject
 + (instancetype)makeWithPaymentSystemId:(nullable NSString *)paymentSystemId
     locale:(nullable NSString *)locale
-    environment:(nullable EnvironmentBox *)environment;
+    environment:(nullable ManiEnvironmentBox *)environment;
 @property(nonatomic, copy, nullable) NSString * paymentSystemId;
 @property(nonatomic, copy, nullable) NSString * locale;
-@property(nonatomic, strong, nullable) EnvironmentBox * environment;
+@property(nonatomic, strong, nullable) ManiEnvironmentBox * environment;
 @end
 
 /// The codec used by all APIs.

@@ -31,8 +31,8 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
   return (result == [NSNull null]) ? nil : result;
 }
 
-@implementation EnvironmentBox
-- (instancetype)initWithValue:(Environment)value {
+@implementation ManiEnvironmentBox
+- (instancetype)initWithValue:(ManiEnvironment)value {
   self = [super init];
   if (self) {
     _value = value;
@@ -81,7 +81,7 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
 @implementation HostInfo
 + (instancetype)makeWithPaymentSystemId:(nullable NSString *)paymentSystemId
     locale:(nullable NSString *)locale
-    environment:(nullable EnvironmentBox *)environment {
+    environment:(nullable ManiEnvironmentBox *)environment {
   HostInfo* pigeonResult = [[HostInfo alloc] init];
   pigeonResult.paymentSystemId = paymentSystemId;
   pigeonResult.locale = locale;
@@ -119,7 +119,7 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
     case 131: 
       {
         NSNumber *enumAsNumber = [self readValue];
-        return enumAsNumber == nil ? nil : [[EnvironmentBox alloc] initWithValue:[enumAsNumber integerValue]];
+        return enumAsNumber == nil ? nil : [[ManiEnvironmentBox alloc] initWithValue:[enumAsNumber integerValue]];
       }
     default:
       return [super readValueOfType:type];
@@ -137,8 +137,8 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
   } else if ([value isKindOfClass:[HostInfo class]]) {
     [self writeByte:130];
     [self writeValue:[value toList]];
-  } else if ([value isKindOfClass:[EnvironmentBox class]]) {
-    EnvironmentBox * box = (EnvironmentBox *)value;
+  } else if ([value isKindOfClass:[ManiEnvironmentBox class]]) {
+    ManiEnvironmentBox * box = (ManiEnvironmentBox *)value;
     [self writeByte:131];
     [self writeValue:(value == nil ? [NSNull null] : [NSNumber numberWithInteger:box.value])];
   } else {
