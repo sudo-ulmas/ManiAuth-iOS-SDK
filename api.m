@@ -41,6 +41,16 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
 }
 @end
 
+@implementation ManiResidentTypeBox
+- (instancetype)initWithValue:(ManiResidentType)value {
+  self = [super init];
+  if (self) {
+    _value = value;
+  }
+  return self;
+}
+@end
+
 @interface Token ()
 + (Token *)fromList:(NSArray<id> *)list;
 + (nullable Token *)nullableFromList:(NSArray<id> *)list;
@@ -81,18 +91,24 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
 @implementation HostInfo
 + (instancetype)makeWithPaymentSystemId:(nullable NSString *)paymentSystemId
     locale:(nullable NSString *)locale
-    environment:(nullable ManiEnvironmentBox *)environment {
+    pinfl:(nullable NSString *)pinfl
+    environment:(nullable ManiEnvironmentBox *)environment
+    residentType:(nullable ManiResidentTypeBox *)residentType {
   HostInfo* pigeonResult = [[HostInfo alloc] init];
   pigeonResult.paymentSystemId = paymentSystemId;
   pigeonResult.locale = locale;
+  pigeonResult.pinfl = pinfl;
   pigeonResult.environment = environment;
+  pigeonResult.residentType = residentType;
   return pigeonResult;
 }
 + (HostInfo *)fromList:(NSArray<id> *)list {
   HostInfo *pigeonResult = [[HostInfo alloc] init];
   pigeonResult.paymentSystemId = GetNullableObjectAtIndex(list, 0);
   pigeonResult.locale = GetNullableObjectAtIndex(list, 1);
-  pigeonResult.environment = GetNullableObjectAtIndex(list, 2);
+  pigeonResult.pinfl = GetNullableObjectAtIndex(list, 2);
+  pigeonResult.environment = GetNullableObjectAtIndex(list, 3);
+  pigeonResult.residentType = GetNullableObjectAtIndex(list, 4);
   return pigeonResult;
 }
 + (nullable HostInfo *)nullableFromList:(NSArray<id> *)list {
@@ -102,7 +118,9 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
   return @[
     self.paymentSystemId ?: [NSNull null],
     self.locale ?: [NSNull null],
+    self.pinfl ?: [NSNull null],
     self.environment ?: [NSNull null],
+    self.residentType ?: [NSNull null],
   ];
 }
 @end
@@ -120,6 +138,11 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
       {
         NSNumber *enumAsNumber = [self readValue];
         return enumAsNumber == nil ? nil : [[ManiEnvironmentBox alloc] initWithValue:[enumAsNumber integerValue]];
+      }
+    case 132: 
+      {
+        NSNumber *enumAsNumber = [self readValue];
+        return enumAsNumber == nil ? nil : [[ManiResidentTypeBox alloc] initWithValue:[enumAsNumber integerValue]];
       }
     default:
       return [super readValueOfType:type];
@@ -140,6 +163,10 @@ static id GetNullableObjectAtIndex(NSArray<id> *array, NSInteger key) {
   } else if ([value isKindOfClass:[ManiEnvironmentBox class]]) {
     ManiEnvironmentBox * box = (ManiEnvironmentBox *)value;
     [self writeByte:131];
+    [self writeValue:(value == nil ? [NSNull null] : [NSNumber numberWithInteger:box.value])];
+  } else if ([value isKindOfClass:[ManiResidentTypeBox class]]) {
+    ManiResidentTypeBox * box = (ManiResidentTypeBox *)value;
+    [self writeByte:132];
     [self writeValue:(value == nil ? [NSNull null] : [NSNumber numberWithInteger:box.value])];
   } else {
     [super writeValue:value];
