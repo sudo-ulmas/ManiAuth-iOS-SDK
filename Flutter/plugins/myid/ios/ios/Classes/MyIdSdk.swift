@@ -178,7 +178,6 @@ public func buildMyIdConfig(
     config.cameraShape = cameraShape
     config.cameraSelector = cameraSelector
     config.resolution = resolution
-    config.withPhoto = withPhoto
     config.appearance = appearance
     config.organizationDetails = organizationDetails
     config.distance = Float(distance)
