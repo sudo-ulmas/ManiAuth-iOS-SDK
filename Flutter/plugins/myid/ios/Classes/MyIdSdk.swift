@@ -301,8 +301,3 @@ extension UIColor {
     }
 }
 
-extension MyIdAppearance {
-
-    static let `default` = MyIdAppearance()
-}
-
