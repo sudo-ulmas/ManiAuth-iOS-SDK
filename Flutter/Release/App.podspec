@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name                  = 'App'
-  s.version               = '0.8.9' 
+  s.version               = '0.9.0' 
   s.summary               = 'Mani SDK App.'
   s.description           = <<-DESC
 Mani SDK for authentication to Mani platform
