@@ -194,12 +194,20 @@ public func buildMyIdConfig(
         cameraSelector = MyIdCameraSelector.back
     }
     
+    let presentationStyleKey = config["presentationStyle"] as? String ?? ""
+    var presentationStyle = MyIdPresentationStyle.sheet
+    if (presentationStyleKey == "FULL") {
+        presentationStyle = MyIdPresentationStyle.full
+    }
+    
     let organizationDetailsDict = config["organizationDetails"] as? NSDictionary
 
     let logo = (organizationDetailsDict?["logo"] == nil) ? nil : UIImage(named: organizationDetailsDict?["logo"] as! String)
     let organizationDetails = MyIdOrganizationDetails()
     organizationDetails.phoneNumber = organizationDetailsDict?["phone"] as? String ?? ""
     organizationDetails.logo = logo
+    
+    let showErrorScreen = config["showErrorScreen"] as? Bool ?? true
     
     let config = MyIdConfig()
     config.clientId = clientId
@@ -218,8 +226,10 @@ public func buildMyIdConfig(
     config.locale = locale
     config.cameraShape = cameraShape
     config.cameraSelector = cameraSelector
-    config.appearance = appearance
+    config.presentationStyle = presentationStyle
     config.organizationDetails = organizationDetails
+    config.appearance = appearance
+    config.showErrorScreen = showErrorScreen
 
     return config
 }
@@ -237,13 +247,13 @@ class MyIdSdk: NSObject, MyIdClientDelegate {
     
     func onError(exception: MyIdException) {
         if let fResult = flutterResult {
-            fResult(FlutterError(code: "error", message: "\(exception.code ?? "101") - \(exception.message ?? "Unexpected error starting MyID")", details: nil))
+            fResult(FlutterError(code: "\(exception.code)", message: exception.message, details: nil))
         }
     }
     
     func onUserExited() {
         if let fResult = flutterResult {
-            fResult(FlutterError(code: "cancel", message: "User canceled flow", details: nil))
+            fResult(FlutterError(code: "101", message: "User canceled flow", details: nil))
         }
     }
     
@@ -274,10 +284,10 @@ class MyIdSdk: NSObject, MyIdClientDelegate {
             
             MyIdClient.start(withConfig: myidConfig, withDelegate: self)
         } catch let error as NSError {
-            result(FlutterError(code: "error", message: error.domain, details: nil))
+            result(FlutterError(code: "103", message: error.domain, details: nil))
             return;
         } catch {
-            result(FlutterError(code: "error", message: "Unexpected error starting MyID", details: nil))
+            result(FlutterError(code: "103", message: "Unexpected error starting MyID", details: nil))
             return;
         }
     }
