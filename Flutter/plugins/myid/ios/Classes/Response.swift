@@ -5,7 +5,6 @@ func createResponse(_ result: MyIdResult) -> [String: String] {
     var jsonResponse = [String: String]()
     
     jsonResponse["code"] = result.code
-    jsonResponse["comparison"] = "\(result.comparisonValue)"
 
     if let image = result.image {
         if let base64 = image.jpegData(compressionQuality: 1.0)?.base64EncodedString() {

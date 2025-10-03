@@ -142,16 +142,11 @@ public func buildMyIdConfig(
     let appearancePublic = try loadAppearance(config: appearanceConfig)
     let appearance = try loadAppearanceFromConfig(appearancePublic: appearancePublic)
 
-    let clientId = config["clientId"] as? String ?? ""
+    let sessionId = config["sessionId"] as? String ?? ""
     let clientHash = config["clientHash"] as? String ?? ""
     let clientHashId = config["clientHashId"] as? String ?? ""
-    let passportData = config["passportData"] as? String ?? ""
-    let dateOfBirth = config["dateOfBirth"] as? String ?? ""
     let minAge = config["minAge"] as? Int ?? 16
-    let sdkHash = config["sdkHash"] as? String ?? ""
-    let externalId = config["externalId"] as? String ?? ""
-        
-    let threshold = config["threshold"] as? Double ?? 0.55
+
     let distance = config["distance"] as? Double ?? 0.60
     
     let environmentKey = config["environment"] as? String ?? ""
@@ -210,15 +205,10 @@ public func buildMyIdConfig(
     let showErrorScreen = config["showErrorScreen"] as? Bool ?? true
     
     let config = MyIdConfig()
-    config.clientId = clientId
+    config.sessionId = sessionId
     config.clientHash = clientHash
     config.clientHashId = clientHashId
-    config.passportData = passportData
-    config.dateOfBirth = dateOfBirth
-    config.sdkHash = sdkHash
     config.minAge = minAge
-    config.externalId = externalId
-    config.threshold = Float(threshold)
     config.distance = Float(distance)
     config.residency = residency
     config.environment = environment
@@ -227,8 +217,8 @@ public func buildMyIdConfig(
     config.cameraShape = cameraShape
     config.cameraSelector = cameraSelector
     config.presentationStyle = presentationStyle
-    config.organizationDetails = organizationDetails
     config.appearance = appearance
+    config.organizationDetails = organizationDetails
     config.showErrorScreen = showErrorScreen
 
     return config
@@ -255,6 +245,9 @@ class MyIdSdk: NSObject, MyIdClientDelegate {
         if let fResult = flutterResult {
             fResult(FlutterError(code: "101", message: "User canceled flow", details: nil))
         }
+    }
+    
+    func onEvent(event: MyIdEvent) {
     }
     
     @objc static func requiresMainQueueSetup() -> Bool {
