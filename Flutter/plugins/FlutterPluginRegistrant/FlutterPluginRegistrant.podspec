@@ -19,7 +19,11 @@ Depends on all your plugins, and provides a function to register them.
   s.static_framework    = true
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
   s.dependency 'Flutter'
+  s.dependency 'device_info_plus'
   s.dependency 'myid'
+  s.dependency 'package_info_plus'
+  s.dependency 'passkeys_darwin'
+  s.dependency 'ua_client_hints'
   s.dependency 'url_launcher_ios'
 end
 
