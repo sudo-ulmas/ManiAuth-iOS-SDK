@@ -36,6 +36,7 @@ typedef NS_ENUM(NSUInteger, DesignVariant) {
   DesignVariantMani = 0,
   DesignVariantSmartbank = 1,
   DesignVariantBrb = 2,
+  DesignVariantMkb = 3,
 };
 
 /// Wrapper for DesignVariant to allow for nullability.
