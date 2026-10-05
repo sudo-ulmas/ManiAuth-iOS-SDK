@@ -30,12 +30,6 @@
 @import passkeys_darwin;
 #endif
 
-#if __has_include(<ua_client_hints/UAClientHintsPlugin.h>)
-#import <ua_client_hints/UAClientHintsPlugin.h>
-#else
-@import ua_client_hints;
-#endif
-
 #if __has_include(<url_launcher_ios/URLLauncherPlugin.h>)
 #import <url_launcher_ios/URLLauncherPlugin.h>
 #else
@@ -49,9 +43,7 @@
   [MyIdPlugin registerWithRegistrar:[registry registrarForPlugin:@"MyIdPlugin"]];
   [FPPPackageInfoPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FPPPackageInfoPlusPlugin"]];
   [PasskeysPlugin registerWithRegistrar:[registry registrarForPlugin:@"PasskeysPlugin"]];
-  [UAClientHintsPlugin registerWithRegistrar:[registry registrarForPlugin:@"UAClientHintsPlugin"]];
   [URLLauncherPlugin registerWithRegistrar:[registry registrarForPlugin:@"URLLauncherPlugin"]];
 }
 
 @end
-

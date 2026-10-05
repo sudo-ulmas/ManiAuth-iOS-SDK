@@ -37,13 +37,24 @@ class RegisterController: NSObject, ASAuthorizationControllerDelegate, ASAuthori
     func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         switch authorization.credential {
         case let credentialRegistration as ASAuthorizationPlatformPublicKeyCredentialRegistration:
+            var clientExtensionResults: [String: Any]? = nil
+            if #available(iOS 18.0, macOS 15.0, *), let credPrf = credentialRegistration.prf {
+                var prfResult: [String: Any] = ["enabled": credPrf.isSupported]
+                if let prfBytes = credPrf.first?.withUnsafeBytes({ Data($0) }) {
+                    prfResult["results"] = ["first": prfBytes.toBase64URL()]
+                }
+                clientExtensionResults = ["prf": prfResult]
+            }
+
             let response = RegisterResponse(
                 id: credentialRegistration.credentialID.toBase64URL(),
                 rawId: credentialRegistration.credentialID.toBase64URL(),
                 clientDataJSON: credentialRegistration.rawClientDataJSON.toBase64URL(),
                 attestationObject: credentialRegistration.rawAttestationObject!.toBase64URL(),
-                transports: []
+                transports: [],
+                clientExtensionResults: clientExtensionResults
             )
+            
             completion?(.success(response))
             break
         case let securityKeyRegistration as ASAuthorizationSecurityKeyPublicKeyCredentialRegistration:
@@ -81,19 +92,19 @@ class RegisterController: NSObject, ASAuthorizationControllerDelegate, ASAuthori
             break
         default:
             let message = "Expected instance of ASAuthorizationPlatformPublicKeyCredentialRegistration or ASAuthorizationSecurityKeyPublicKeyCredentialRegistration but got: " + authorization.credential.description
-            completion?(.failure(FlutterError(code: CustomErrors.unexpectedAuthorizationResponse, message: message)))
+            completion?(.failure(PigeonError(code: CustomErrors.unexpectedAuthorizationResponse, message: message)))
         }
 
     }
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
         if let err = error as? ASAuthorizationError {
-            completion?(.failure(FlutterError(from: err)))
+            completion?(.failure(PigeonError(from: err)))
             return
         }
         
         let nsErr = error as NSError
-        completion?(.failure(FlutterError(fromNSError: nsErr)))
+        completion?(.failure(PigeonError(fromNSError: nsErr)))
         return
     }
 
